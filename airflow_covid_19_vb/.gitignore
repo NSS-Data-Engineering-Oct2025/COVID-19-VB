@@ -1,0 +1,16 @@
+
+target/
+dbt_packages/
+logs/
+.user.yml
+
+# dbt credentials (never commit)
+profiles.yml
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS
+.DS_Store
