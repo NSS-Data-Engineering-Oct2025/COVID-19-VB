@@ -205,3 +205,25 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+
+touch airflow_covid_19_vb/models/staging/.gitkeep
+touch airflow_covid_19_vb/models/intermediate/.gitkeep
+touch airflow_covid_19_vb/models/marts/.gitkeep
+touch src/ingest/.gitkeep
+touch src/sql/.gitkeep
+
+.env
+.venv/
+__pycache__/
+*.pyc
+logs/
+```
+
+SNOWFLAKE_ACCOUNT=
+SNOWFLAKE_USER=
+SNOWFLAKE_PASSWORD=
+SNOWFLAKE_DATABASE=
+SNOWFLAKE_WAREHOUSE=
+CENSUS_API_KEY=
