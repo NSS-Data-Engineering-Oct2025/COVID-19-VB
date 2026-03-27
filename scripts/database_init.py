@@ -41,6 +41,7 @@ def main():
      new_historic_deaths NUMBER
      )
      """)
+    snowflake_conn.execute("""CREATE TABLE raw.covid_data_stage LIKE raw.covid_data""")
 
     snowflake_conn.execute("""
      CREATE OR REPLACE TABLE raw.vaccination_state (
@@ -113,9 +114,10 @@ def main():
     additional_doses_pfizer NUMBER,
     additional_doses_janssen NUMBER,
     additional_doses_unk_manuf NUMBER
-   )
+     )
       """)
-    
+    snowflake_conn.execute("""CREATE TABLE raw.vaccination_state_stage LIKE raw.vaccination_state""")
+
     snowflake_conn.execute("""
        CREATE OR REPLACE TABLE covid_db.raw.census_population (
      state_name VARCHAR,
@@ -123,6 +125,9 @@ def main():
      state_code VARCHAR
       )
      """)
+    snowflake_conn.execute("""CREATE TABLE raw.census_population_stage LIKE raw.census_population""")
+    
     logger.info("Database and tables created successfully.")
+
 if __name__ == "__main__":
     main()
