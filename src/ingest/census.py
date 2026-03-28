@@ -40,9 +40,6 @@ def fetch_api_to_pandas(url):
         "STATE":        "STATE_CODE"    # FIPS code "01", "02" etc
     })
 
-    # Cast population from string to numeric
-    df["POPULATION"] = pd.to_numeric(df["POPULATION"], errors="coerce")
-
     logger.info(f"Total rows fetched: {len(df)}")
     return df
 

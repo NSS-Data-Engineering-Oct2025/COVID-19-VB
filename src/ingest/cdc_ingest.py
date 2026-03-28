@@ -17,7 +17,7 @@ SNOWFLAKE_WAREHOUSE = os.getenv("SNOWFLAKE_WAREHOUSE")
 SNOWFLAKE_DATABASE = os.getenv("SNOWFLAKE_DATABASE")
 SNOWFLAKE_SCHEMA = os.getenv("SNOWFLAKE_SCHEMA")
 
-API_COVID_VACCINATION = os.getenv("API_COVID_VACCINATION")
+API_CDC_WEEKLY_CASES = os.getenv("API_CDC_WEEKLY_CASES")
 TARGET_TABLE_ONE = os.getenv("TARGET_TABLE_ONE")
 
 
@@ -64,7 +64,7 @@ def main():
         database=SNOWFLAKE_DATABASE,
         schema=SNOWFLAKE_SCHEMA
     )
-    logger.info(f"Fetching data from {API_COVID_VACCINATION}")
+    logger.info(f"Fetching data from {API_CDC_WEEKLY_CASES}")
 
     cs = conn.cursor()
     cs.execute(f"USE DATABASE {SNOWFLAKE_DATABASE}")
@@ -72,10 +72,10 @@ def main():
     cs.close()
 
     # Fetch API with pagination
-    covid_data_final = fetch_api_to_pandas(API_COVID_VACCINATION)
+    cdc_data_final = fetch_api_to_pandas(API_CDC_WEEKLY_CASES)
 
     # Load into Snowflake
-    load_to_snowflake(covid_data_final, conn, TARGET_TABLE_ONE)
+    load_to_snowflake(cdc_data_final, conn, TARGET_TABLE_ONE)
 
     conn.close()
     logger.info(f"API data loaded into {TARGET_TABLE_ONE} successfully.")
