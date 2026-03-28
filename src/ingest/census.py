@@ -1,4 +1,5 @@
 import os
+
 import pandas as pd
 import requests
 import snowflake.connector
@@ -16,33 +17,34 @@ SNOWFLAKE_WAREHOUSE = os.getenv("SNOWFLAKE_WAREHOUSE")
 SNOWFLAKE_DATABASE = os.getenv("SNOWFLAKE_DATABASE")
 SNOWFLAKE_SCHEMA = os.getenv("SNOWFLAKE_SCHEMA")
 
-API_URL = os.getenv("API_CENSUS_POPULATION")
+API_CENSUS_POPULATION = os.getenv("API_CENSUS_POPULATION")
 TARGET_TABLE_TWO = os.getenv("TARGET_TABLE_TWO")
 
 
 def fetch_api_to_pandas(url):
-    all_data = []
-    offset = 0
-    limit = 10000  # maximum rows per API request
+    logger.info(f"Fetching Census data from {url}")
+    response = requests.get(url)
+    response.raise_for_status()
 
-    while True:
-        paginated_url = f"{url}?$limit={limit}&$offset={offset}"
-        logger.info(f"Fetching data with offset={offset}")
-        response = requests.get(paginated_url)
-        response.raise_for_status()
-        data = response.json()
+    data = response.json()      # Returns array of arrays
+    headers = data[0]           # First row = column names
+    rows = data[1:]             # Rest = actual data
 
-        if not data:  # stop when no more rows
-            break
-
-        all_data.extend(data)
-        offset += limit
-
-    df = pd.DataFrame(all_data)
+    df = pd.DataFrame(rows, columns=headers)
     df.columns = [col.upper() for col in df.columns]
+
+    # Rename to match Snowflake table columns EXACTLY
+    df = df.rename(columns={
+        "NAME":         "STATE_NAME",   # "Alabama", "Alaska" etc
+        "B01003_001E":  "POPULATION",   # Total population count
+        "STATE":        "STATE_CODE"    # FIPS code "01", "02" etc
+    })
+
+    # Cast population from string to numeric
+    df["POPULATION"] = pd.to_numeric(df["POPULATION"], errors="coerce")
+
     logger.info(f"Total rows fetched: {len(df)}")
     return df
-
 
 def load_to_snowflake(df: pd.DataFrame, conn, table_name: str):
     # truncate table first to avoid duplicates
@@ -62,8 +64,10 @@ def main():
         password=SNOWFLAKE_PASSWORD,
         account=SNOWFLAKE_ACCOUNT,
         warehouse=SNOWFLAKE_WAREHOUSE,
-        database=SNOWFLAKE_DATABASE
+        database=SNOWFLAKE_DATABASE,
+        schema=SNOWFLAKE_SCHEMA
     )
+    logger.info(f"Fetching data from {API_CENSUS_POPULATION}")
 
     cs = conn.cursor()
     cs.execute(f"USE DATABASE {SNOWFLAKE_DATABASE}")
@@ -71,10 +75,10 @@ def main():
     cs.close()
 
     # Fetch API with pagination
-    covid_data_final = fetch_api_to_pandas(API_URL)
+    census_data_final = fetch_api_to_pandas(API_CENSUS_POPULATION)
 
     # Load into Snowflake
-    load_to_snowflake(covid_data_final, conn, TARGET_TABLE_TWO)
+    load_to_snowflake(census_data_final, conn, TARGET_TABLE_TWO)
 
     conn.close()
     logger.info(f"API data loaded into {TARGET_TABLE_TWO} successfully.")

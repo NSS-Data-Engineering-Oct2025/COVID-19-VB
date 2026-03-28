@@ -1,4 +1,5 @@
 import os
+
 import pandas as pd
 import requests
 import snowflake.connector
@@ -16,7 +17,7 @@ SNOWFLAKE_WAREHOUSE = os.getenv("SNOWFLAKE_WAREHOUSE")
 SNOWFLAKE_DATABASE = os.getenv("SNOWFLAKE_DATABASE")
 SNOWFLAKE_SCHEMA = os.getenv("SNOWFLAKE_SCHEMA")
 
-API_URL = os.getenv("API_URL")
+API_COVID_VACCINATION = os.getenv("API_COVID_VACCINATION")
 TARGET_TABLE_ONE = os.getenv("TARGET_TABLE_ONE")
 
 
@@ -26,9 +27,7 @@ def fetch_api_to_pandas(url):
     limit = 10000  # maximum rows per API request
 
     while True:
-        paginated_url = f"{url}?$limit={limit}&$offset={offset}"
-        logger.info(f"Fetching data with offset={offset}")
-        response = requests.get(paginated_url)
+        response = requests.get(url, params={"$limit": limit, "$offset": offset})
         response.raise_for_status()
         data = response.json()
 
@@ -62,8 +61,10 @@ def main():
         password=SNOWFLAKE_PASSWORD,
         account=SNOWFLAKE_ACCOUNT,
         warehouse=SNOWFLAKE_WAREHOUSE,
-        database=SNOWFLAKE_DATABASE
+        database=SNOWFLAKE_DATABASE,
+        schema=SNOWFLAKE_SCHEMA
     )
+    logger.info(f"Fetching data from {API_COVID_VACCINATION}")
 
     cs = conn.cursor()
     cs.execute(f"USE DATABASE {SNOWFLAKE_DATABASE}")
@@ -71,7 +72,7 @@ def main():
     cs.close()
 
     # Fetch API with pagination
-    covid_data_final = fetch_api_to_pandas(API_URL)
+    covid_data_final = fetch_api_to_pandas(API_COVID_VACCINATION)
 
     # Load into Snowflake
     load_to_snowflake(covid_data_final, conn, TARGET_TABLE_ONE)
