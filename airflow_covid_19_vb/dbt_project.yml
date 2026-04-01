@@ -31,12 +31,12 @@ clean-targets:         # directories to be removed by `dbt clean`
 # files using the `{{ config(...) }}` macro.
 models:
   airflow_covid_19_vb:
-    # Config indicated by + and applies to all files under models/example/
-    raw:
-      +schema: raw
     staging:
-      +schema: staging
+      +materialized: view
+      +schema: STAGING
     intermediate:
-      +schema: intermediate
+      +materialized: view
+      +schema: INTERMEDIATE
     marts:
-      +schema: marts
+      +materialized: view
+      +schema: MARTS 

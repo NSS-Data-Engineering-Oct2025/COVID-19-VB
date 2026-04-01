@@ -1,11 +1,11 @@
 version: 2
 
-models:
-  - name: raw_covid_cases
-    description: "Raw COVID-19 cases table"
-    columns:
-      - name: report_date
-        description: "Date of the report"
-        
-      - name: state
-        description: "State abbreviation"
+sources:
+  - name: raw
+    database: COVID_DB
+    schema: RAW
+    tables:
+      - name: CDC_WEEKLY_CASES
+      - name: CENSUS_POPULATION
+      - name: COVID_VACCINATION
+      - name: STATE_MAPPING
