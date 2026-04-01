@@ -27,12 +27,21 @@ sql_path = os.path.join(base_dir, "..", "sql", "ingest_vaccine_data.sql")
 sql_file_path = os.path.normpath(sql_path)
 
 def fetch_api_to_pandas(url):
-    response = requests.get(url)
-    response.raise_for_status()
-    data = response.json()
-    covid_data = pd.DataFrame(data)
-    covid_data.columns = [col.upper() for col in covid_data.columns]
-    return covid_data
+        all_data = []
+        offset = 0
+        limit = 10000
+        while True:
+          response = requests.get(url, params={"$offset": offset, "$limit": limit})
+          response.raise_for_status()
+          data = response.json()
+          if not data:
+            break
+          all_data.extend(data)
+          offset += limit
+        covid_data = pd.DataFrame(all_data)
+        covid_data.columns = [col.upper() for col in covid_data.columns]
+        return covid_data
+
 
 def load_to_snowflake(data: pd.DataFrame, conn, table_name: str):
     result = write_pandas(conn, data, table_name)

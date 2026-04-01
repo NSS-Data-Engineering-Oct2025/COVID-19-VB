@@ -1,0 +1,22 @@
+services:
+  airflow:
+    build: .
+    command: standalone
+    ports:
+      - "8081:8080"
+    env_file: .env
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=false
+      - PYTHONPATH=/opt/airflow/workspace/src
+
+    volumes:
+      - .:/opt/airflow/workspace
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+    working_dir: /opt/airflow/workspace
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/api/v2/version"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s

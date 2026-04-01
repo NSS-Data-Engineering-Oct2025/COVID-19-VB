@@ -184,11 +184,11 @@ def main():
 
     snowflake_conn.execute("""
        CREATE OR REPLACE TABLE covid_db.raw.census_population (
-     state_name VARCHAR,
-     population NUMBER,
-     state_code VARCHAR
-      )
-     """)
+       name VARCHAR,
+       B01003_001E NUMBER,
+       state VARCHAR
+        )
+       """)
     snowflake_conn.execute("""CREATE TABLE IF NOT EXISTS raw.census_population_stage LIKE raw.census_population""")
     
     logger.info("Database and tables created successfully.")

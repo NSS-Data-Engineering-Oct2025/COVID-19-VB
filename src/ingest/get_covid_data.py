@@ -25,10 +25,18 @@ sql_path = os.path.join(base_dir, "..", "sql", "ingest_covid_data.sql")
 sql_file_path = os.path.normpath(sql_path)
 
 def fetch_api_to_pandas(url):
-    response = requests.get(url)
-    response.raise_for_status()
-    data = response.json()
-    covid_data = pd.DataFrame(data)
+    all_data = []
+    offset = 0
+    limit = 10000
+    while True:
+        response = requests.get(url, params={"$offset": offset, "$limit": limit})
+        response.raise_for_status()
+        data = response.json()
+        if not data:
+            break
+        all_data.extend(data)
+        offset += limit
+    covid_data = pd.DataFrame(all_data)
     covid_data.columns = [col.upper() for col in covid_data.columns]
     return covid_data
 
@@ -56,7 +64,12 @@ def main():
     cs.execute(f"USE DATABASE {SNOWFLAKE_DATABASE}")
     cs.execute(f"USE SCHEMA {SNOWFLAKE_SCHEMA_RAW}")
     cs.execute(f"TRUNCATE TABLE {STAGE_TABLE}")
-    covid_data_final = fetch_api_to_pandas(API_URL)
+    try:
+        covid_data_final = fetch_api_to_pandas(API_URL)
+        
+    except Exception as e:
+        logger.error(f"Error occurred while fetching or loading data: {e}")
+        raise
     load_to_snowflake(covid_data_final, conn, STAGE_TABLE)
     merge_sql = read_sql(
      sql_file_path,

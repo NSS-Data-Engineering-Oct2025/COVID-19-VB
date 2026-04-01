@@ -28,3 +28,4 @@ print("Total rows:", len(df))
 df['date'] = pd.to_datetime(df['date'])
 print("Earliest date:", df['date'].min())
 print("Latest date:", df['date'].max())
+
