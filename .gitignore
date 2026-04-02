@@ -227,3 +227,32 @@ SNOWFLAKE_PASSWORD=
 SNOWFLAKE_DATABASE=
 SNOWFLAKE_WAREHOUSE=
 CENSUS_API_KEY=
+
+
+
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Environment
+.env
+
+# Data and logs
+data/
+logs/
+
+
+# dbt
+airflow_covid_19_vb/target/
+airflow_covid_19_vb/dbt_packages/
+airflow_covid_19_vb/logs/
+airflow_covid_19_vb/.user.yml
+airflow_covid_19_vb/.profiles.yml

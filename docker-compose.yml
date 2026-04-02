@@ -13,9 +13,7 @@ services:
     volumes:
       - .:/opt/airflow/workspace
       - ./dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./airflow_covid_19_vb:/opt/airflow/airflow_covid_19_vb
-      - C:\Users\TitanUp\.dbt\profiles.yml:/opt/airflow/workspace/airflow_covid_19_vb/profiles.yml
+      - ./logs:/opt/airflow/logs - ./airflow_covid_19_vb:/opt/airflow/workspace/airflow_covid_19_vb/profiles.yml
     healthcheck:
       test: [ "CMD", "curl", "--fail", "http://localhost:8080/api/v2/version" ]
       interval: 30s
