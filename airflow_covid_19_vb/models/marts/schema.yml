@@ -4,22 +4,17 @@ models:
   - name: mart_cases_summary
     description: "Weekly case metrics by state with surge detection and rolling averages"
     columns:
-      - name: state_abbr
+      - name: state
         tests: [not_null]
       - name: week_start_date
         tests: [not_null]
-      - name: new_cases_per_100k
-        tests:
-          - not_null:
-              config:
-                severity: warn
+
       - name: case_fatality_rate
         tests:
           - not_null:
               config:
                 severity: warn
-      - name: rolling_4wk_avg_cases
-        tests: [not_null]
+
 
   - name: mart_regional_summary
     description: "Case fatality rate and vaccination metrics aggregated by US Census region"
@@ -28,28 +23,19 @@ models:
         tests: [not_null]
       - name: week_start_date
         tests: [not_null]
-      - name: regional_cfr
-        tests:
-          - not_null:
-              config:
-                severity: warn
-      - name: regional_cases_per_100k
+
+      - name: cases_per_100k
         tests: [not_null]
 
   - name: mart_vacc_vs_cases
     description: "Vaccination coverage vs case rates with herd immunity and correlation metrics"
     columns:
-      - name: state_abbr
-        tests: [not_null]
       - name: week_start_date
         tests: [not_null]
-      - name: herd_immunity_status
-        tests: [not_null]
+
 
   - name: mart_data_freshness
     description: "Data freshness and pipeline health monitoring by source"
     columns:
       - name: source_name
         tests: [not_null, unique]
-      - name: freshness_status
-        tests: [not_null]

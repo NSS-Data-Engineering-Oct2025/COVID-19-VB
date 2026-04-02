@@ -1,3 +1,17 @@
+# version: 2
+# sources:
+#   - name: raw
+#     database: COVID_DB
+#     schema: RAW
+#     tables:
+#       - name: COVID_DATA
+#         description: "This table contains the raw COVID-19 data ingested from the API."
+#       - name: VACCINATION_STATE
+#         description: "This table contains the raw vaccine data ingested from the API."
+#       - name: CENSUS_POPULATION
+#         description: "This table contains the raw population data ingested from the API."
+#       - name: STATE_MAPPING
+#         description: "This table contains the raw state abbreviation data ingested from the API."
 version: 2
 sources:
   - name: raw
@@ -6,9 +20,47 @@ sources:
     tables:
       - name: COVID_DATA
         description: "This table contains the raw COVID-19 data ingested from the API."
+        columns:
+          - name: DATE_UPDATED
+            tests:
+              - not_null
+          - name: STATE
+            tests:
+              - not_null
+          - name: START_DATE
+            tests:
+              - not_null
+          - name: END_DATE
+            tests:
+              - not_null
+              
       - name: VACCINATION_STATE
         description: "This table contains the raw vaccine data ingested from the API."
+        columns:
+          - name: DATE
+            tests:
+              - not_null
+          - name: LOCATION
+            tests:
+              - not_null
+              
       - name: CENSUS_POPULATION
         description: "This table contains the raw population data ingested from the API."
+        columns:
+          - name: NAME
+            tests:
+              - not_null
+          - name: STATE
+            tests:
+              - not_null
+              
       - name: STATE_MAPPING
         description: "This table contains the raw state abbreviation data ingested from the API."
+        columns:
+          - name: STATE_ABBR
+            tests:
+              - not_null
+              - unique
+          - name: STATE_NAME
+            tests:
+              - not_null
