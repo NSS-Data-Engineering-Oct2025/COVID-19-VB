@@ -9,14 +9,15 @@ services:
       - AIRFLOW__CORE__LOAD_EXAMPLES=false
       - PYTHONPATH=/opt/airflow/workspace/src
       - AIRFLOW_CONN_SNOWFLAKE_DEFAULT=${AIRFLOW_CONN_SNOWFLAKE_DEFAULT}
+      - DBT_PROFILES_DIR=/opt/airflow/airflow_covid_19_vb
     volumes:
       - .:/opt/airflow/workspace
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
-      - ~/.aws:/home/airflow/.aws
-      - ~/.dbt:/home/airflow/.dbt
+      - ./airflow_covid_19_vb:/opt/airflow/airflow_covid_19_vb
+      - C:\Users\TitanUp\.dbt\profiles.yml:/opt/airflow/workspace/airflow_covid_19_vb/profiles.yml
     healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:8080/api/v2/version"]
+      test: [ "CMD", "curl", "--fail", "http://localhost:8080/api/v2/version" ]
       interval: 30s
       timeout: 10s
       retries: 5

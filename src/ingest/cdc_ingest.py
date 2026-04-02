@@ -62,7 +62,7 @@ def main():
         account=SNOWFLAKE_ACCOUNT,
         warehouse=SNOWFLAKE_WAREHOUSE,
         database=SNOWFLAKE_DATABASE,
-        schema=SNOWFLAKE_SCHEMA
+        schema=SNOWFLAKE_SCHEMA,
     )
     logger.info(f"Fetching data from {API_CDC_WEEKLY_CASES}")
 
