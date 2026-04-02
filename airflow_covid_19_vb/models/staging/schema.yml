@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: cdc_weekly_cases
+    description: "Cleaned weekly CDC case and death data by state"
+    columns:
+      - name: state_abbr
+        tests: [not_null]
+      - name: week_start_date
+        tests: [not_null]
+      - name: new_cases_cleaned
+        tests: [not_null]
+      - name: new_deaths_cleaned
+        tests: [not_null]
+
+  - name: census_population
+    description: "US Census state-level population data"
+    columns:
+      - name: state_name
+        tests: [not_null]
+      - name: state_fips
+        tests: [not_null]
+      - name: population
+        tests: [not_null]
+
+  - name: covid_vaccination
+    description: "CDC vaccination data by state and date"
+    columns:
+      - name: state_abbr
+        tests: [not_null]
+      - name: vaccination_date
+        tests: [not_null]
+
+  - name: state_stg_mapping
+    description: "State abbreviation to name, fips, region and division lookup"
+    columns:
+      - name: state_abbr
+        tests: [not_null, unique]
+      - name: state_fips
+        tests: [not_null, unique]
+      - name: region
+        tests: [not_null]
+

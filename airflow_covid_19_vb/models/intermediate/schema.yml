@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: int_cases_enriched
+    description: "CDC weekly cases enriched with state, region, population and derived metrics"
+    columns:
+      - name: state_abbr
+        tests: [not_null]
+      - name: week_start_date
+        tests: [not_null]
+
+  - name: int_vaccinations_enriched
+    description: "CDC vaccination data aggregated weekly, enriched with state and population"
+    columns:
+      - name: state_abbr
+        tests: [not_null]
+      - name: week_start_date
+        tests: [not_null]
+
+  - name: int_cases_vaccinations_joined
+    description: "Cases and vaccinations joined by state and week — primary source for marts"
+    columns:
+      - name: state_abbr
+        tests: [not_null]
+      - name: week_start_date
+        tests: [not_null]
