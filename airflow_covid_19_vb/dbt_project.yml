@@ -15,6 +15,11 @@ model-paths: ["models"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
 seed-paths: ["seeds"]
+seeds:
+  airflow_covid_19_vb:                   
+    state_mapping:
+      file: seeds/state_mapping.csv
+      header: true
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 

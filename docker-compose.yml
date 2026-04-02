@@ -8,11 +8,14 @@ services:
     environment:
       - AIRFLOW__CORE__LOAD_EXAMPLES=false
       - PYTHONPATH=/opt/airflow/workspace/src
+      - DBT_PROFILES_DIR=/root/.dbt
 
     volumes:
       - .:/opt/airflow/workspace
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
+      - ./airflow_covid_19_vb:/opt/airflow/dbt
+
     working_dir: /opt/airflow/workspace
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/api/v2/version"]

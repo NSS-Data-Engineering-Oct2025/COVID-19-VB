@@ -1,0 +1,14 @@
+version: 2
+sources:
+  - name: raw
+    database: COVID_DB
+    schema: RAW
+    tables:
+      - name: COVID_DATA
+        description: "This table contains the raw COVID-19 data ingested from the API."
+      - name: VACCINATION_STATE
+        description: "This table contains the raw vaccine data ingested from the API."
+      - name: CENSUS_POPULATION
+        description: "This table contains the raw population data ingested from the API."
+      - name: STATE_MAPPING
+        description: "This table contains the raw state abbreviation data ingested from the API."

@@ -1,5 +1,6 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from airflow.operators.bash import BashOperator
 from datetime import datetime
 
 from ingest.get_census import main as census_main
@@ -7,7 +8,7 @@ from ingest.get_covid_data import main as covid_main
 from ingest.get_vaccine_data import main as vaccine_main
 
 with DAG(
-    dag_id="health_ingestion",
+    dag_id="covid_19_pipeline",
     start_date=datetime(2024, 1, 1),
     schedule_interval="@daily",
     catchup=False,
@@ -28,4 +29,14 @@ with DAG(
         python_callable=vaccine_main
     )
 
-    task_census >> task_covid >> task_vaccine
+    dbt_run = BashOperator(
+        task_id="dbt_run",
+        bash_command = "cd /opt/airflow/workspace/airflow_covid_19_vb && dbt run"
+    )
+
+    dbt_test = BashOperator(
+        task_id="dbt_test",
+        bash_command = "cd /opt/airflow/workspace/airflow_covid_19_vb && dbt test"
+    )
+
+    [task_census >> task_covid >> task_vaccine] >> dbt_run >> dbt_test
