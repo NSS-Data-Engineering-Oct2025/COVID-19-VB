@@ -210,3 +210,9 @@ data/
 .venv
 logs/
 dist/
+
+
+airflow_covid_19_vb/profiles.yml
+airflow_covid_19_vb/.user.yml
+airflow_covid_19_vb/logs
+airflow_covid_19_vb/target

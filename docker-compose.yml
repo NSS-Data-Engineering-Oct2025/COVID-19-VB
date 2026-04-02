@@ -8,14 +8,14 @@ services:
     environment:
       - AIRFLOW__CORE__LOAD_EXAMPLES=false
       - PYTHONPATH=/opt/airflow/workspace/src
-      - DBT_PROFILES_DIR=/opt/airflow/airflow_covid_19_vb
+      - DBT_PROFILES_DIR=/opt/airflow/workspace/airflow_covid_19_vb
 
     volumes:
       - .:/opt/airflow/workspace
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
-      - ./airflow_covid_19_vb:/opt/airflow/airflow_covid_19_vb
-      - C:\Users\Praveena\.dbt\profiles.yml:/opt/airflow/workspace/airflow_covid_19_vb/profiles.yml
+      - ./airflow_covid_19_vb:/opt/airflow/workspace/airflow_covid_19_vb
+
 
     working_dir: /opt/airflow/workspace
     healthcheck:
