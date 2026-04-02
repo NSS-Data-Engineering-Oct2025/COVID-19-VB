@@ -1,6 +1,6 @@
 select 
     DATE_UPDATED as data_updated,
-    STATE as state,
+    upper(trim(STATE)) as state,
     START_DATE as week_start_date,
     END_DATE as week_end_date,
     TOT_CASES as total_cases,

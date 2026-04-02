@@ -18,6 +18,10 @@ dependencies = [
     "polars>=1.39.3",
     "pandas>=3.0.1",
     "pyarrow>=23.0.1",
+    "streamlit>=1.30.0",
+    "plotly>=5.20.0",
+    "snowflake-sqlalchemy",
+    "us>=2.0"
 ]
 
 [project.scripts]

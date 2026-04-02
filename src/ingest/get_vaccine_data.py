@@ -1,5 +1,5 @@
 import os
-
+import time
 import pandas as pd
 import requests
 import snowflake.connector
@@ -29,15 +29,21 @@ sql_file_path = os.path.normpath(sql_path)
 def fetch_api_to_pandas(url):
         all_data = []
         offset = 0
-        limit = 10000
+        limit = 5000
         while True:
-          response = requests.get(url, params={"$offset": offset, "$limit": limit})
-          response.raise_for_status()
-          data = response.json()
+          try:
+            response = requests.get(url, params={"$offset": offset, "$limit": limit},timeout=30) 
+            response.raise_for_status() 
+            data = response.json() 
+          except requests.exceptions.RequestException as e:
+            logger.info(f"Retrying... error: {e}")
+            time.sleep(5)
+            continue
           if not data:
             break
           all_data.extend(data)
           offset += limit
+          time.sleep(1)
         covid_data = pd.DataFrame(all_data)
         covid_data.columns = [col.upper() for col in covid_data.columns]
         return covid_data
