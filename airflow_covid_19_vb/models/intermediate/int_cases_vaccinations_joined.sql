@@ -40,10 +40,12 @@ joined AS (
         c.latest_case_date,         
         v.latest_vacc_date        
 
-    FROM cases c
-    LEFT JOIN vacc v
-        ON  c.state_abbr = v.state_abbr
-        AND c.week_start_date = v.week_start_date
+  FROM cases c
+  LEFT JOIN vacc v
+    ON c.state_abbr = v.state_abbr
+    AND CAST(v.week_start_date AS DATE) 
+        BETWEEN DATEADD('day', -6, CAST(c.week_start_date AS DATE))
+        AND     DATEADD('day',  6, CAST(c.week_start_date AS DATE))
 )
 
 SELECT * FROM joined
