@@ -27,21 +27,3 @@ def query_snowflake(sql: str) -> pd.DataFrame:
     finally:
         conn.close()
 
-# import snowflake.connector
-
-# conn = snowflake.connector.connect(
-#     user="PV",               # exact username
-#     password="Admin@123DE1de2",  # exact password
-#     account="onzkokh-jm43762",    # account locator
-#     warehouse="COMPUTE_WH",
-#     database="covid_db",
-#     schema="MARTS"
-# )
-
-# cs = conn.cursor()
-# try:
-#     cs.execute("SELECT CURRENT_USER(), CURRENT_DATABASE(), CURRENT_SCHEMA()")
-#     print(cs.fetchone())
-# finally:
-#     cs.close()
-#     conn.close()
