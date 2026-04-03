@@ -595,6 +595,7 @@ source = { editable = "." }
 dependencies = [
     { name = "apache-airflow" },
     { name = "dbt-snowflake" },
+    { name = "fastapi" },
     { name = "loguru" },
     { name = "pandas" },
     { name = "pendulum" },
@@ -607,6 +608,7 @@ dependencies = [
     { name = "snowflake-sqlalchemy" },
     { name = "streamlit" },
     { name = "us" },
+    { name = "uvicorn", extra = ["standard"] },
 ]
 
 [package.dev-dependencies]
@@ -618,6 +620,7 @@ dev = [
 requires-dist = [
     { name = "apache-airflow", specifier = ">=3.1.7" },
     { name = "dbt-snowflake", specifier = ">=1.10.0" },
+    { name = "fastapi", specifier = ">0.103.0" },
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "pandas", specifier = ">=3.0.1" },
     { name = "pendulum", specifier = ">=3.2.0" },
@@ -630,6 +633,7 @@ requires-dist = [
     { name = "snowflake-sqlalchemy" },
     { name = "streamlit", specifier = ">=1.30.0" },
     { name = "us", specifier = ">=2.0" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.22.0" },
 ]
 
 [package.metadata.requires-dev]
