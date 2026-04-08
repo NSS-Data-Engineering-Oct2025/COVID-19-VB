@@ -1,25 +1,27 @@
 with base as (
     select
-        state,
+        state_name,
+        state_abbr,
         week_start_date,
         new_cases,
         new_deaths,
         total_cases,
         total_deaths,
         population
-    from {{ ref('int_covid_cases_vaccinations') }}
+    from {{ ref('int_covid_vaccination') }}
 ),
 
 metrics as (
     select
-        state,
+        state_name,
+        state_abbr,
         week_start_date,
         new_cases,
         total_cases,
         total_deaths,
         -- 7-day rolling avg of new cases
         avg(new_cases) over (
-            partition by state
+            partition by state_name
             order by week_start_date
             rows between 6 preceding and current row
         ) as rolling_7d_avg_new_cases,

@@ -6,7 +6,7 @@ with base as (
         total_cases,
         total_deaths,
         population
-    from {{ ref('int_covid_cases_vaccinations') }}
+    from {{ ref('int_covid_vaccination') }}
 ),
 
 aggregates as (

@@ -21,7 +21,7 @@ for data_sets in [cases_data, vacc_data, regional_data]:
 
 @app.get("/api/v1/state/{state_code}/summary")
 def state_summary(state_code: str):
-    state_cases = cases_data[cases_data['STATE'] == state_code.upper()]
+    state_cases = cases_data[cases_data['STATE_ABBR'] == state_code.upper()]
     if state_cases.empty:
         return {"error": "State not found or no data."}
 
@@ -31,7 +31,7 @@ def state_summary(state_code: str):
     avg_cfr = round(state_cases['CASE_FATALITY_RATE'].mean(), 2)
 
     return {
-        "state": state_code.upper(),
+        "state_name": state_code.upper(),
         "total_cases": total_cases,
         "total_deaths": total_deaths,
         "new_cases": new_cases,
@@ -41,13 +41,13 @@ def state_summary(state_code: str):
 
 @app.get("/api/v1/state/{state_code}/vaccination_trend")
 def vaccination_trend(state_code: str):
-    state_vacc = vacc_data[vacc_data['STATE'] == state_code.upper()]
+    state_vacc = vacc_data[vacc_data['STATE_ABBR'] == state_code.upper()]
 
     if state_vacc.empty:
         return {"error": "State not found or no data."}
 
     trend = state_vacc[
-        ['WEEK_START_DATE', 'ADMINISTERED', 'NEW_CASES']
+        ['WEEK_START_DATE', 'TOTAL_ADMINISTERED','TOTAL_DISTRIBUTED' ,'NEW_CASES']
     ].sort_values('WEEK_START_DATE')
 
 
