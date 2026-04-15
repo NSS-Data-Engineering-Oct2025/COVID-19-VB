@@ -6,4 +6,4 @@ select
     DISTRIBUTED
 from {{ source('raw', 'VACCINATION_STATE') }}
 where location is not null
-
+and ADMINISTERED > 0

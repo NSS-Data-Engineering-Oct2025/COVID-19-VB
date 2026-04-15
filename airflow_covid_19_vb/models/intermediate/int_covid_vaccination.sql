@@ -72,6 +72,7 @@ final as (
     left join vaccination v
         on s.state_abbr = v.state
         and v.week_end_date between c.week_start_date and c.week_end_date
+         
     left join population p
         on trim(lower(s.state_name)) = trim(lower(p.state))
 )

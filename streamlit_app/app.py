@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from snowflake_conn import query_snowflake
 import plotly.express as px
+from datetime import datetime, timezone
 
 st.set_page_config(page_title="COVID Dashboard", layout="wide")
 
@@ -31,8 +32,31 @@ selected_week_range = st.sidebar.slider(
 
 # --- Data Freshness ---
 st.sidebar.subheader("Data Freshness")
+now = datetime.now(timezone.utc)
+
 for _, row in freshness_data.iterrows():
-    st.sidebar.write(f"- {row['SOURCE_NAME']} (Last updated: {row['LAST_UPDATED']})")
+    last_updated = row["LAST_UPDATED"]
+
+    # Convert to datetime if not NaT
+    if pd.notna(last_updated):
+        last_updated = pd.to_datetime(last_updated, utc=True)
+        time_diff = now - last_updated
+        days = time_diff.days
+        hours = time_diff.seconds // 3600
+
+        if days > 0:
+            staleness = f"{days} days old"
+        else:
+            staleness = f"{hours} hours old"
+
+        last_updated_str = last_updated.strftime('%Y-%m-%d %H:%M')
+    else:
+        staleness = "unknown"
+        last_updated_str = "N/A"
+
+    st.sidebar.write(
+        f"- {row['SOURCE_NAME']} (Last updated: {last_updated_str}, {staleness})"
+    )
 
 # --- Filter Data ---
 state_cases = cases_data[
@@ -107,13 +131,13 @@ monthly_vacc = state_vacc.groupby('MONTH').agg({
 # --- Chart Selection ---
 chart_option = st.radio(
     "Select Analysis View",
-    ["Cases Trend (Best)", "Cases per 100K", "Cases vs Vaccination"]
+    ["Cases Trend ", "Cases per 100K", "Cases vs Vaccination"]
 )
 
 
 # OPTION A: BEST STORY
 
-if chart_option == "Cases Trend (Best)":
+if chart_option == "Cases Trend ":
     st.subheader(f"COVID Waves Over Time ({selected_state})")
 
     fig = go.Figure()
