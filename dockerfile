@@ -7,5 +7,5 @@ RUN pip install --no-cache-dir pandas \
     snowflake-connector-python \
     snowflake-sqlalchemy \
     python-dotenv \
-    loguru 
-    # dbt-snowflake
+    loguru \
+    dbt-snowflake

@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: int_cases_vaccination
+    description: "Intermediate table joining COVID data, vaccination, population, and state info"
+    columns:
+      - name: state
+        description: "State code (e.g., CA, NY)"
+      - name: week_start_date
+        description: "Start date of the week for the data"
+      - name: total_cases
+        description: "Total COVID-19 cases for the week"
+      - name: total_deaths
+        description: "Total COVID-19 deaths for the week"
+      - name: total_administered
+        description: "Total vaccine doses administered for the week"
+      - name: total_distributed
+        description: "Total vaccine doses distributed for the week"
+  - name: int_vaccination_weekly
+    description: "Intermediate table aggregating vaccination data on a weekly basis"
+    columns:
+      - name: state
+        description: "State code (e.g., CA, NY)"
+      - name: mmwr_week
+        description: "MMWR week number for the data"
+      - name: total_administered
+        description: "Total vaccine doses administered for the week"
+      - name: total_distributed
+        description: "Total vaccine doses distributed for the week"

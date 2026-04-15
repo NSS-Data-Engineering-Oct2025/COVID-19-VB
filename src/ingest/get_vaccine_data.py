@@ -1,11 +1,12 @@
 import os
-
+import time
 import pandas as pd
 import requests
 import snowflake.connector
 from dotenv import load_dotenv
 from loguru import logger
 from snowflake.connector.pandas_tools import write_pandas
+import random
 
 from ingest.get_covid_data import TARGET_TABLE_NAME
 
@@ -26,21 +27,46 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 sql_path = os.path.join(base_dir, "..", "sql", "ingest_vaccine_data.sql")
 sql_file_path = os.path.normpath(sql_path)
 
-def fetch_api_to_pandas(url):
-        all_data = []
-        offset = 0
-        limit = 10000
-        while True:
-          response = requests.get(url, params={"$offset": offset, "$limit": limit})
-          response.raise_for_status()
-          data = response.json()
-          if not data:
+def fetch_api_to_pandas(url, max_retries=5, base_delay=1):
+    """Fetch API data with pagination, exponential backoff, and max retries."""
+    all_data = []
+    offset = 0
+    limit = 5000
+
+    while True:
+        for attempt in range(max_retries):
+            try:
+                response = requests.get(
+                    url,
+                    params={"$offset": offset, "$limit": limit},
+                    timeout=30
+                )
+                response.raise_for_status()
+                data = response.json()
+                break  # Success, exit retry loop
+
+            except requests.exceptions.RequestException as e:
+                wait_time = base_delay * (2 ** attempt) + random.uniform(0, 1)
+                logger.warning(
+                    f"Attempt {attempt + 1} failed: {e}. Retrying in {wait_time:.2f}s..."
+                )
+                time.sleep(wait_time)
+        else:
+            # All retries failed
+            logger.error(f"Max retries exceeded for offset {offset}. Skipping batch.")
+            return pd.DataFrame()
+
+        if not data:
             break
-          all_data.extend(data)
-          offset += limit
-        covid_data = pd.DataFrame(all_data)
-        covid_data.columns = [col.upper() for col in covid_data.columns]
-        return covid_data
+
+        all_data.extend(data)
+        offset += limit
+        time.sleep(1)  # Avoid hitting API rate limits
+
+    df = pd.DataFrame(all_data)
+    df.columns = [col.upper() for col in df.columns]
+    logger.info(f"Fetched {len(df)} records from API.")
+    return df
 
 
 def load_to_snowflake(data: pd.DataFrame, conn, table_name: str):

@@ -38,6 +38,7 @@ def fetch_api_to_pandas(url):
         offset += limit
     covid_data = pd.DataFrame(all_data)
     covid_data.columns = [col.upper() for col in covid_data.columns]
+
     return covid_data
 
 def load_to_snowflake(data: pd.DataFrame, conn, table_name: str):
