@@ -43,7 +43,7 @@ def fetch_api_to_pandas(url):
 
 def load_to_snowflake(data: pd.DataFrame, conn, table_name: str):
     result = write_pandas(conn, data, table_name)
-    success, nchunks, nrows = result[:3]
+    success, nchunks, nrows = result[:3] #unpacked but not used, consider removing if not needed for logging or error handling
     logger.info("data loaded to snowflake")
 
 def read_sql(file_path: str, **kwargs):
@@ -79,6 +79,8 @@ def main():
      )
     cs.execute(merge_sql)
     logger.info("merge completed successfully")
+
+    #dead code remove the commented out code and the logger statement if we are not truncating the staging table
     #cs.execute(f"TRUNCATE TABLE {STAGE_TABLE}")
     logger.info("staging table truncated")
     cs.close()

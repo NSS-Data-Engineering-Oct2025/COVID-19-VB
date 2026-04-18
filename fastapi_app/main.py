@@ -2,13 +2,17 @@ from fastapi import FastAPI
 import pandas as pd
 from streamlit_app.snowflake_conn import query_snowflake
 
+
+#consider sperating handlers fromn routes
+# single responsibility principle, better organization as the app grows, easier testing and maintenance
+
 app = FastAPI(
     title="COVID-19 Public Health API",
     version="1.0.0",
     description="API layer serving COVID-19 analytics data."
 )
 
-
+# a lot of slect * here, consider optimizing queries to only pull necessary columns for each endpoint
 cases_data = query_snowflake("SELECT * FROM MART_CASES_SUMMARY")
 vacc_data = query_snowflake("SELECT * FROM MART_VACCINATION_VS_CASES")
 regional_data = query_snowflake("SELECT * FROM MART_REGIONAL_SUMMARY")

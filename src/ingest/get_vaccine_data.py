@@ -19,7 +19,7 @@ SNOWFLAKE_WAREHOUSE = os.getenv("SNOWFLAKE_WAREHOUSE")
 SNOWFLAKE_DATABASE = os.getenv("SNOWFLAKE_DATABASE")
 SNOWFLAKE_SCHEMA_RAW = os.getenv("SNOWFLAKE_SCHEMA_RAW")
 
-API_URL_Vaccine = os.getenv("API_URL_Vaccine")
+API_URL_Vaccine = os.getenv("API_URL_Vaccine") #Naming is inconsistent
 TARGET_TABLE_NAME_VACCINE = os.getenv("TARGET_TABLE_NAME_VACCINE")
 STG_VACCINE_TABLE = os.getenv("STG_VACCINE_TABLE")
 
@@ -71,7 +71,7 @@ def fetch_api_to_pandas(url, max_retries=5, base_delay=1):
 
 def load_to_snowflake(data: pd.DataFrame, conn, table_name: str):
     result = write_pandas(conn, data, table_name)
-    success, nchunks, nrows = result[:3]
+    success, nchunks, nrows = result[:3] #variables unpacked but not used, consider removing if not needed for logging or error handling
     logger.info("data loaded to snowflake")
 
 def read_sql(file_path: str, **kwargs):
@@ -102,6 +102,7 @@ def main():
      )
     cs.execute(merge_sql)
     logger.info("merge completed successfully")
+    #dead code remove the commented out code and the logger statement if we are not truncating the staging table
     #cs.execute(f"TRUNCATE TABLE {STAGE_TABLE}")
     logger.info("staging table truncated")
     cs.close()

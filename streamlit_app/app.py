@@ -9,6 +9,8 @@ st.set_page_config(page_title="COVID Dashboard", layout="wide")
 
 st.title("COVID Impact & Vaccination Progress Analysis")
 
+#There are a lot of select * here
+
 # --- Load Data ---
 cases_data = query_snowflake("SELECT * FROM MART_CASES_SUMMARY")
 vacc_data = query_snowflake("SELECT * FROM MART_VACCINATION_VS_CASES")
